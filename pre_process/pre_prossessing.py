@@ -18,8 +18,8 @@ import matplotlib.pyplot as plt
 from nltk.corpus import stopwords 
 from nltk.tokenize import word_tokenize 
 from nltk.util import ngrams
-#from spacy.lang.pt.stop_words import STOP_WORDS
-from spacy.lang.en.stop_words import STOP_WORDS
+from spacy.lang.pt.stop_words import STOP_WORDS
+#from spacy.lang.en.stop_words import STOP_WORDS
 
 from unidecode import unidecode
 
@@ -137,8 +137,8 @@ class Processing(object):
         df_network = handler.read_network_dataset()
         df = df_network[df_network.tweets != '']
 
-        #nlp = spacy.load('pt_core_news_sm')
-        nlp = spacy.load('en_core_web_sm')
+        nlp = spacy.load('pt_core_news_sm')
+        #nlp = spacy.load('en_core_web_sm')
         nltk.download("stopwords")
         nltk.download('punkt')
 

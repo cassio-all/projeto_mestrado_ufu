@@ -5,9 +5,9 @@ import pandas as pd
 
 class DataHandler(object):
 
-    def __init__(self, social_network, search_words):
+    def __init__(self, social_network, user):
 
-        self.search_words = search_words
+        self.user = user
         self.social_network = social_network
 
     def store_network_dataset(self, dataset):
@@ -26,7 +26,7 @@ class DataHandler(object):
         dataset.to_csv(os.path.join(directory_input, 'dataset.csv')
                        , sep=';', index=None)
         dataset.to_csv(os.path.join(directory_log
-                       , self.social_network + self.search_words + date + '.csv')
+                       , self.social_network + self.user + date + '.csv')
                        , sep=';', index=None)
 
     def store_processed_dataset(self, dataset):

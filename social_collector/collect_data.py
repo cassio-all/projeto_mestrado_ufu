@@ -11,13 +11,11 @@ class CollectData(object):
 
     # search_words: Term for related tweets
     # social_networks: Social networks that will be collected the data
-    # n_tweets: Number of Tweets
 
-    def __init__(self, social_networks, search_words, n_tweets):
+    def __init__(self, social_networks, tt_user):
 
-        self.search_words = search_words
+        self.tt_user = tt_user
         self.social_networks = social_networks
-        self.n_tweets = n_tweets
 
     def network_handler(self):
 
@@ -29,17 +27,42 @@ class CollectData(object):
     def get_tweets(self):
 
         api = Api.twitter_api()  
-        new_search = self.search_words + " -filter:retweets" # Filter retweets
-        tweets = tw.Cursor(api.search , q=new_search, lang = 'pt').items(self.n_tweets)
+        tweets = api.user_timeline(screen_name=self.tt_user,
+                                   count=200,
+                                   include_rts=False,
+                                   exclude_replies=True)
+        last_id = tweets[-1].id
+        while (True):
+            more_tweets = api.user_timeline(screen_name=self.tt_user,
+                                            count=200,
+                                            include_rts=False,
+                                            exclude_replies=True,
+                                            max_id=last_id-1)
+            # There are no more tweets
+            if (len(more_tweets) == 0):
+                break
+            else:
+                last_id = more_tweets[-1].id-1
+                tweets = tweets + more_tweets
 
-        tweets_ = []
+        text = []
         created = []
+        image_url = []
 
         for tweet in tweets:
-            tweets_.append(tweet.text) # Get tweets
+
+            text.append(tweet.text.encode('utf-8')) # Get tweets
             created.append(tweet.created_at) # Get timestamp
+            try:
+                image_url.append(tweet.entities['media'][0]['media_url'])
+            except:
+                image_url.append('')
 
-        dataset = pd.DataFrame({"Created_at": created, "tweets": tweets_})
-
-        store_data = DataHandler('twitter', self.search_words)
+        dataset = pd.DataFrame({"Created_at": created,
+                                "text": text,
+                                "image_url": image_url})
+        
+        store_data = DataHandler('twitter', self.tt_user)
         store_data.store_network_dataset(dataset)
+        import pdb; pdb.set_trace()
+        print('a')
