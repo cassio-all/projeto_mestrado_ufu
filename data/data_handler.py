@@ -24,10 +24,10 @@ class DataHandler(object):
 
         #saves the new data in the input and input/log directory
         dataset.to_csv(os.path.join(directory_input, 'dataset.csv')
-                       , sep=';', index=None)
+                       , sep=';', index=None, encoding='utf8')
         dataset.to_csv(os.path.join(directory_log
                        , self.social_network + self.user + date + '.csv')
-                       , sep=';', index=None)
+                       , sep=';', index=None, encoding='utf8')
 
     def store_processed_dataset(self, dataset):
 

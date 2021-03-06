@@ -13,7 +13,7 @@ def get_args():
   parser.add_argument(
       '--ttuser',
       '-tt',
-      default = 'camilafarani',
+      default = 'vihvitorino_',
       type = str,
       help = 'user that will be researched on twitter')
   parser.add_argument(

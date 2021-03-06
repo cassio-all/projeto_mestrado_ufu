@@ -27,6 +27,7 @@ class CollectData(object):
         api = Api.twitter_api()  
         tweets = api.user_timeline(screen_name=self.tt_user,
                                    count=200,
+                                   tweet_mode='extended',
                                    include_rts=False,
                                    exclude_replies=True)
         last_id = tweets[-1].id
@@ -73,12 +74,15 @@ class CollectData(object):
         quoted_text = []
         quoted_media = []
         quoted_user_id = []
-        import pdb; pdb.set_trace()
+        
         for tweet in tweets:
             
             created.append(tweet.created_at)
             tweet_id.append(tweet.id)
-            text.append(tweet.text)
+            try:
+                text.append(tweet.full_text)
+            except AttributeError:
+                text.append(tweet.text)
             hashtags.append(tweet.entities['hashtags'])
             symbols.append(tweet.entities['symbols'])
             user_mentions.append(tweet.entities['user_mentions'])
@@ -158,7 +162,7 @@ class CollectData(object):
                                 "quoted_media": quoted_media,
                                 "quoted_user_id": quoted_user_id,
                                 })
-        import pdb; pdb.set_trace()
+        
         store_data = DataHandler('twitter', self.tt_user)
         store_data.store_network_dataset(dataset)
         import pdb; pdb.set_trace()
